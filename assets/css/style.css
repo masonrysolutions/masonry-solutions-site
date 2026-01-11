@@ -1,12 +1,10 @@
 :root{
   --text:#0f172a;
-  --muted:#334155;
-  --bg:#f4f6f8;
-  --card:rgba(255,255,255,.45);
-  --border:rgba(15,23,42,.12);
-  --accent:#c9a227;   /* gold */
-  --accent2:#1e40af;  /* deep blue */
-  --shadow:0 14px 36px rgba(2,6,23,.14);
+  --muted:#475569;
+  --card: rgba(255,255,255,.60);
+  --border: rgba(15,23,42,.12);
+  --radius: 18px;
+  --shadow: 0 14px 36px rgba(2,6,23,.14);
   --radius:18px;
 }
 
