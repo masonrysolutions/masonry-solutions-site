@@ -1,208 +1,162 @@
-<script>
-  // AUTO GALLERY LOADER (jsDelivr) — no GitHub API rate-limit issues
-  const OWNER = "mansonrysolutions";
-  const REPO  = "masonry-solutions-site";
-  const BRANCH = "main"; // if your repo uses master, change to "master"
-  const FOLDER_PREFIX = "assets/img/gallery/";
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Gallery | Masonry Solutions Building &amp; Construction Ltd</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
 
-  const grid = document.getElementById("galleryGrid");
-  const meta = document.getElementById("galleryMeta");
-  const errBox = document.getElementById("galleryError");
-  const search = document.getElementById("gallerySearch");
+  <style>
+    .gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:14px;}
+    .gallery-item{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:rgba(255,255,255,.03);}
+    .gallery-item img{width:100%;height:220px;object-fit:cover;display:block;}
+    .gallery-caption{padding:10px 12px;font-size:.9rem;color:var(--muted);word-break:break-word;}
+    .gallery-controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center;justify-content:space-between;}
+    .gallery-search{width:100%;max-width:360px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);}
+    .gallery-meta{color:var(--muted);font-size:.9rem;}
+    .gallery-error{padding:12px;border:1px solid rgba(255,0,0,.35);border-radius:var(--radius);background:rgba(255,0,0,.06);color:var(--text);margin-top:12px;white-space:pre-wrap;}
+  </style>
+</head>
 
-  let allFiles = [];
+<body>
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Masonry Solutions Building &amp; Construction Ltd logo">
+        <div class="meta">
+          <strong>Masonry Solutions Building &amp; Construction Ltd</strong>
+          <span>Masonry • Groundworks • Building &amp; Fit-Outs</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="gallery.html" style="color:var(--text);background:rgba(37,99,235,.14);border-color:rgba(37,99,235,.25)">Gallery</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </div>
 
-  function isImage(path){
-    const p = path.toLowerCase();
-    return p.endsWith(".jpg") || p.endsWith(".jpeg") || p.endsWith(".png") || p.endsWith(".webp");
-    // If your iPhone uploaded HEIC, tell me and I’ll add .heic support properly.
-  }
+  <main class="container">
+    <section class="section">
+      <div class="card pad">
+        <h2>Gallery</h2>
+        <p class="small">
+          Photos load automatically from <code>assets/img/gallery/</code>.
+          Upload images there and refresh.
+        </p>
 
-  function render(list){
-    grid.innerHTML = "";
-    if (!list.length){
-      meta.textContent = "No photos found.";
-      return;
-    }
+        <div class="gallery-controls">
+          <input id="gallerySearch" class="gallery-search" type="search" placeholder="Search filenames (optional)">
+          <div class="gallery-meta" id="galleryMeta">Loading photos…</div>
+        </div>
 
-    meta.textContent = `${list.length} photo${list.length === 1 ? "" : "s"} shown`;
+        <div id="galleryError" class="gallery-error" style="display:none"></div>
+        <div id="galleryGrid" class="gallery-grid"></div>
+      </div>
+    </section>
+  </main>
 
-    const frag = document.createDocumentFragment();
-    for (const path of list){
-      const item = document.createElement("div");
-      item.className = "gallery-item";
+  <footer class="footer">
+    <div class="container">
+      <div>
+        <div><strong>Masonry Solutions Building &amp; Construction Ltd</strong></div>
+        <div class="small">Quality masonry and building services</div>
+      </div>
+      <div class="small">© Masonry Solutions Building &amp; Construction Ltd</div>
+    </div>
+  </footer>
 
-      const img = document.createElement("img");
-      img.loading = "lazy";
-      img.alt = path.split("/").pop().replace(/\.[^/.]+$/, "");
-      img.src = `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/${path}`;
+  <script>
+    (function () {
+      const OWNER = "mansonrysolutions";
+      const REPO  = "masonry-solutions-site";
+      const FOLDER_PATH = "assets/img/gallery";
 
-      const cap = document.createElement("div");
-      cap.className = "gallery-caption";
-      cap.textContent = path.split("/").pop();
+      const grid  = document.getElementById("galleryGrid");
+      const meta  = document.getElementById("galleryMeta");
+      const errBox = document.getElementById("galleryError");
+      const search = document.getElementById("gallerySearch");
 
-      item.appendChild(img);
-      item.appendChild(cap);
-      frag.appendChild(item);
-    }
-    grid.appendChild(frag);
-  }
+      function showError(msg){
+        errBox.style.display = "block";
+        errBox.textContent = msg;
+        meta.textContent = "Couldn’t load photos.";
+      }
 
-  function showError(msg){
-    errBox.style.display = "block";
-    errBox.textContent = msg;
-    meta.textContent = "Couldn’t load photos.";
-  }
+      function isImage(name){
+        const n = (name || "").toLowerCase();
+        return n.endsWith(".jpg") || n.endsWith(".jpeg") || n.endsWith(".png") || n.endsWith(".webp") || n.endsWith(".heic");
+      }
 
-  // Get a file list from jsDelivr’s package API
-  fetch(`https://data.jsdelivr.com/v1/package/gh/${OWNER}/${REPO}@${BRANCH}`)
-    .then(r => r.ok ? r.json() : Promise.reject(r))
-    .then(data => {
-      const files = (data.files || []);
+      function render(list){
+        grid.innerHTML = "";
+        meta.textContent = list.length ? `${list.length} photo${list.length===1?"":"s"} shown` : "No photos found.";
+        for (const f of list){
+          const item = document.createElement("div");
+          item.className = "gallery-item";
 
-      // Flatten the tree into paths
-      const paths = [];
-      function walk(nodes, prefix=""){
-        for (const n of nodes){
-          if (n.type === "file") paths.push(prefix + n.name);
-          if (n.type === "directory") walk(n.files || [], prefix + n.name + "/");
+          const img = document.createElement("img");
+          img.loading = "lazy";
+          img.alt = (f.name || "").replace(/\.[^/.]+$/, "");
+          img.src = f.download_url;
+
+          const cap = document.createElement("div");
+          cap.className = "gallery-caption";
+          cap.textContent = f.name;
+
+          item.appendChild(img);
+          item.appendChild(cap);
+          grid.appendChild(item);
         }
       }
-      walk(files, "");
 
-      allFiles = paths
-        .filter(p => p.startsWith(FOLDER_PREFIX))
-        .filter(p => isImage(p));
-
-      // show newest-ish first (if you name them with dates/01/02 etc)
-      allFiles.sort((a,b) => b.localeCompare(a));
-
-      if (!allFiles.length){
-        showError("No images found in assets/img/gallery/. Upload JPG/PNG/WEBP images into that folder in GitHub, then refresh.");
-        return;
-      }
-
-      render(allFiles);
-    })
-    .catch(() => {
-      showError("Gallery could not load images. Check OWNER/REPO/BRANCH and that images are in assets/img/gallery/.");
-    });
-
-  search.addEventListener("input", () => {
-    const q = (search.value || "").trim().toLowerCase();
-    if (!q) return render(allFiles);
-    render(allFiles.filter(p => p.toLowerCase().includes(q)));
-  });
-<script>
-  // Auto Gallery Loader (robust)
-  // - Detects your default branch automatically
-  // - Loads JPG/JPEG/PNG/WEBP/HEIC
-  // - Shows a clear error message if something is wrong
-
-  const OWNER = "mansonrysolutions";
-  const REPO  = "masonry-solutions-site";
-  const FOLDER_PATH = "assets/img/gallery";
-
-  const grid  = document.getElementById("galleryGrid");
-  const meta  = document.getElementById("galleryMeta");
-  const errBox = document.getElementById("galleryError");
-  const search = document.getElementById("gallerySearch");
-
-  let allFiles = [];
-
-  function isImage(name){
-    const n = (name || "").toLowerCase();
-    return n.endsWith(".jpg") || n.endsWith(".jpeg") || n.endsWith(".png") || n.endsWith(".webp") || n.endsWith(".heic");
-  }
-
-  function showError(msg){
-    if (errBox){
-      errBox.style.display = "block";
-      errBox.textContent = msg;
-    }
-    if (meta) meta.textContent = "Couldn’t load photos.";
-  }
-
-  function render(list){
-    if (!grid || !meta) return;
-
-    grid.innerHTML = "";
-    meta.textContent = `${list.length} photo${list.length === 1 ? "" : "s"} shown`;
-
-    if (!list.length){
-      meta.textContent = "No photos found in assets/img/gallery/";
-      return;
-    }
-
-    const frag = document.createDocumentFragment();
-    for (const f of list){
-      const item = document.createElement("div");
-      item.className = "gallery-item";
-
-      const img = document.createElement("img");
-      img.loading = "lazy";
-      img.alt = (f.name || "").replace(/\.[^/.]+$/, "");
-      img.src = f.download_url;
-
-      const cap = document.createElement("div");
-      cap.className = "gallery-caption";
-      cap.textContent = f.name;
-
-      item.appendChild(img);
-      item.appendChild(cap);
-      frag.appendChild(item);
-    }
-    grid.appendChild(frag);
-  }
-
-  async function getDefaultBranch(){
-    const url = `https://api.github.com/repos/${OWNER}/${REPO}`;
-    const r = await fetch(url, { headers: { "Accept": "application/vnd.github+json" }});
-    if (!r.ok) throw new Error(`Repo lookup failed (${r.status})`);
-    const data = await r.json();
-    return data.default_branch || "main";
-  }
-
-  async function loadFiles(branch){
-    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FOLDER_PATH}?ref=${encodeURIComponent(branch)}`;
-    const r = await fetch(url, { headers: { "Accept": "application/vnd.github+json" }});
-    if (!r.ok) throw new Error(`Folder lookup failed (${r.status}) — check folder path and that files exist`);
-    const data = await r.json();
-    if (!Array.isArray(data)) throw new Error("Unexpected folder response");
-    return data.filter(x => x && x.type === "file" && isImage(x.name));
-  }
-
-  (async () => {
-    try {
-      if (meta) meta.textContent = "Loading photos…";
-
-      const branch = await getDefaultBranch();
-      const files = await loadFiles(branch);
-
-      allFiles = files.sort((a,b) => (b.name || "").localeCompare(a.name || ""));
-      render(allFiles);
-
-      // Search
-      if (search){
-        search.addEventListener("input", () => {
-          const q = (search.value || "").trim().toLowerCase();
-          if (!q) return render(allFiles);
-          render(allFiles.filter(f => (f.name || "").toLowerCase().includes(q)));
+      async function getDefaultBranch(){
+        const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}`, {
+          headers: { "Accept": "application/vnd.github+json" }
         });
+        if (!r.ok) throw new Error(`Repo lookup failed (${r.status}).`);
+        const data = await r.json();
+        return data.default_branch || "main";
       }
 
-      if (!allFiles.length){
-        showError("I reached assets/img/gallery/ but found no JPG/PNG/WEBP/HEIC images. Upload photos into assets/img/gallery/ and refresh.");
+      async function loadFiles(branch){
+        const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FOLDER_PATH}?ref=${encodeURIComponent(branch)}`;
+        const r = await fetch(url, { headers: { "Accept": "application/vnd.github+json" }});
+        if (!r.ok) throw new Error(`Folder not found (${r.status}). Path must be exactly: ${FOLDER_PATH}`);
+        const data = await r.json();
+        if (!Array.isArray(data)) throw new Error("Unexpected folder response.");
+        return data.filter(x => x && x.type === "file" && isImage(x.name));
       }
-    } catch (e) {
-      showError(
-        "Gallery could not load images.\n\n" +
-        "Fix checklist:\n" +
-        "1) Folder must be exactly: assets/img/gallery (all lowercase)\n" +
-        "2) Photos must be committed (not just uploaded)\n" +
-        "3) Photo files should be JPG/PNG/WEBP (HEIC is supported here too)\n\n" +
-        "Technical:\n" + (e && e.message ? e.message : String(e))
-      );
-    }
-  })();
-</script>
+
+      (async () => {
+        try {
+          const branch = await getDefaultBranch();
+          const files = await loadFiles(branch);
+          files.sort((a,b) => (b.name||"").localeCompare(a.name||""));
+          render(files);
+
+          search.addEventListener("input", () => {
+            const q = (search.value || "").trim().toLowerCase();
+            if (!q) return render(files);
+            render(files.filter(f => (f.name||"").toLowerCase().includes(q)));
+          });
+
+          if (!files.length){
+            showError("I reached assets/img/gallery/ but found no images (JPG/PNG/WEBP/HEIC). Upload photos into assets/img/gallery/ and refresh.");
+          }
+        } catch (e) {
+          showError(
+            "Gallery could not load images.\n\n" +
+            "Check:\n" +
+            "1) Photos are committed inside assets/img/gallery/\n" +
+            "2) Folder is exactly lowercase: assets/img/gallery\n\n" +
+            "Technical: " + (e && e.message ? e.message : String(e))
+          );
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>
