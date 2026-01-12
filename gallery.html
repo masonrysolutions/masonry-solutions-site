@@ -1,194 +1,96 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Gallery | Masonry Solutions Building &amp; Construction Ltd</title>
-  <link rel="stylesheet" href="assets/css/style.css"/>
-  <style>
-    /* small extra styling just for the gallery grid */
-    .gallery-grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap:14px;
-      margin-top:14px;
-    }
-    .gallery-item{
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      overflow:hidden;
-      background: rgba(255,255,255,.03);
-    }
-    .gallery-item img{
-      width:100%;
-      height:220px;
-      object-fit:cover;
-      display:block;
-    }
-    .gallery-caption{
-      padding:10px 12px;
-      font-size:.9rem;
-      color: var(--muted);
-      word-break: break-word;
-    }
-    .gallery-controls{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .gallery-search{
-      width:100%;
-      max-width:360px;
-      padding:10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      color: var(--text);
-    }
-    .gallery-meta{
-      color: var(--muted);
-      font-size: .9rem;
-    }
-    .gallery-error{
-      padding:12px;
-      border:1px solid rgba(255,0,0,.35);
-      border-radius: var(--radius);
-      background: rgba(255,0,0,.06);
-      color: var(--text);
-      margin-top:12px;
-    }
-  </style>
-</head>
-<body>
+<script>
+  // AUTO GALLERY LOADER (jsDelivr) — no GitHub API rate-limit issues
+  const OWNER = "mansonrysolutions";
+  const REPO  = "masonry-solutions-site";
+  const BRANCH = "main"; // if your repo uses master, change to "master"
+  const FOLDER_PREFIX = "assets/img/gallery/";
 
-  <div class="topbar">
-    <div class="container topbar-inner">
-      <a class="brand" href="index.html">
-        <img src="assets/img/logo.png" alt="Masonry Solutions Building &amp; Construction Ltd logo">
-        <div class="meta">
-          <strong>Masonry Solutions Building &amp; Construction Ltd</strong>
-          <span>Masonry • Groundworks • Building &amp; Fit-Outs</span>
-        </div>
-      </a>
-      <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="services.html">Services</a>
-        <a href="gallery.html" style="color:var(--text);background:rgba(37,99,235,.14);border-color:rgba(37,99,235,.25)">Gallery</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-    </div>
-  </div>
+  const grid = document.getElementById("galleryGrid");
+  const meta = document.getElementById("galleryMeta");
+  const errBox = document.getElementById("galleryError");
+  const search = document.getElementById("gallerySearch");
 
-  <main class="container">
-    <section class="section">
-      <div class="card pad">
-        <h2>Gallery</h2>
-        <p class="small">
-         
-        </p>
+  let allFiles = [];
 
-        <div class="gallery-controls">
-          <input id="gallerySearch" class="gallery-search" type="search" placeholder="Search by filename (optional)">
-          <div class="gallery-meta" id="galleryMeta">Loading photos…</div>
-        </div>
+  function isImage(path){
+    const p = path.toLowerCase();
+    return p.endsWith(".jpg") || p.endsWith(".jpeg") || p.endsWith(".png") || p.endsWith(".webp");
+    // If your iPhone uploaded HEIC, tell me and I’ll add .heic support properly.
+  }
 
-        <div id="galleryError" class="gallery-error" style="display:none"></div>
-        <div id="galleryGrid" class="gallery-grid" aria-live="polite"></div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <div>
-        <div><strong>Masonry Solutions Building &amp; Construction Ltd</strong></div>
-        <div class="small">Quality masonry and building services</div>
-      </div>
-      <div class="small">© Masonry Solutions Building &amp; Construction Ltd</div>
-    </div>
-  </footer>
-
-  <script>
-    // ---- AUTO GALLERY LOADER (GitHub repo contents) ----
-    // Change these if your repo name ever changes
-    const OWNER = "masonrysolutions";
-const REPO  = "masonry-solutions-site";
-const FOLDER_PATH = "assets/img/gallery";
-
-    const apiUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FOLDER_PATH}`;
-
-    const grid = document.getElementById("galleryGrid");
-    const meta = document.getElementById("galleryMeta");
-    const errBox = document.getElementById("galleryError");
-    const search = document.getElementById("gallerySearch");
-
-    let allFiles = [];
-
-    function isImage(name){
-      const n = name.toLowerCase();
-      return n.endsWith(".jpg") || n.endsWith(".jpeg") || n.endsWith(".png") || n.endsWith(".webp");
+  function render(list){
+    grid.innerHTML = "";
+    if (!list.length){
+      meta.textContent = "No photos found.";
+      return;
     }
 
-    function render(list){
-      grid.innerHTML = "";
-      if (!list.length){
-        meta.textContent = "No photos found.";
+    meta.textContent = `${list.length} photo${list.length === 1 ? "" : "s"} shown`;
+
+    const frag = document.createDocumentFragment();
+    for (const path of list){
+      const item = document.createElement("div");
+      item.className = "gallery-item";
+
+      const img = document.createElement("img");
+      img.loading = "lazy";
+      img.alt = path.split("/").pop().replace(/\.[^/.]+$/, "");
+      img.src = `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/${path}`;
+
+      const cap = document.createElement("div");
+      cap.className = "gallery-caption";
+      cap.textContent = path.split("/").pop();
+
+      item.appendChild(img);
+      item.appendChild(cap);
+      frag.appendChild(item);
+    }
+    grid.appendChild(frag);
+  }
+
+  function showError(msg){
+    errBox.style.display = "block";
+    errBox.textContent = msg;
+    meta.textContent = "Couldn’t load photos.";
+  }
+
+  // Get a file list from jsDelivr’s package API
+  fetch(`https://data.jsdelivr.com/v1/package/gh/${OWNER}/${REPO}@${BRANCH}`)
+    .then(r => r.ok ? r.json() : Promise.reject(r))
+    .then(data => {
+      const files = (data.files || []);
+
+      // Flatten the tree into paths
+      const paths = [];
+      function walk(nodes, prefix=""){
+        for (const n of nodes){
+          if (n.type === "file") paths.push(prefix + n.name);
+          if (n.type === "directory") walk(n.files || [], prefix + n.name + "/");
+        }
+      }
+      walk(files, "");
+
+      allFiles = paths
+        .filter(p => p.startsWith(FOLDER_PREFIX))
+        .filter(p => isImage(p));
+
+      // show newest-ish first (if you name them with dates/01/02 etc)
+      allFiles.sort((a,b) => b.localeCompare(a));
+
+      if (!allFiles.length){
+        showError("No images found in assets/img/gallery/. Upload JPG/PNG/WEBP images into that folder in GitHub, then refresh.");
         return;
       }
 
-      meta.textContent = `${list.length} photo${list.length === 1 ? "" : "s"} shown`;
-
-      const frag = document.createDocumentFragment();
-      for (const f of list){
-        const item = document.createElement("div");
-        item.className = "gallery-item";
-
-        // Use the file download URL directly
-        const img = document.createElement("img");
-        img.loading = "lazy";
-        img.alt = f.name.replace(/\.[^/.]+$/, "");
-        img.src = f.download_url;
-
-        const cap = document.createElement("div");
-        cap.className = "gallery-caption";
-        cap.textContent = f.name;
-
-        item.appendChild(img);
-        item.appendChild(cap);
-        frag.appendChild(item);
-      }
-      grid.appendChild(frag);
-    }
-
-    function showError(msg){
-      errBox.style.display = "block";
-      errBox.textContent = msg;
-      meta.textContent = "Couldn’t load photos.";
-    }
-
-    fetch(apiUrl, { headers: { "Accept": "application/vnd.github+json" }})
-      .then(r => r.ok ? r.json() : Promise.reject(r))
-      .then(data => {
-        if (!Array.isArray(data)) throw new Error("Unexpected response");
-        allFiles = data.filter(x => x && x.type === "file" && isImage(x.name));
-        // newest-ish first: GitHub contents API is often alphabetical; we’ll sort by name descending
-        allFiles.sort((a,b) => (b.name || "").localeCompare(a.name || ""));
-        render(allFiles);
-      })
-      .catch(() => {
-        showError("Gallery could not load images. Make sure you have images inside assets/img/gallery/ in your GitHub repo.");
-      });
-
-    search.addEventListener("input", () => {
-      const q = (search.value || "").trim().toLowerCase();
-      if (!q) return render(allFiles);
-      render(allFiles.filter(f => (f.name || "").toLowerCase().includes(q)));
+      render(allFiles);
+    })
+    .catch(() => {
+      showError("Gallery could not load images. Check OWNER/REPO/BRANCH and that images are in assets/img/gallery/.");
     });
-  </script>
 
-</body>
-</html>
+  search.addEventListener("input", () => {
+    const q = (search.value || "").trim().toLowerCase();
+    if (!q) return render(allFiles);
+    render(allFiles.filter(p => p.toLowerCase().includes(q)));
+  });
+</script>
