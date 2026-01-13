@@ -205,3 +205,47 @@ p{color:rgba(15,23,42,.75);line-height:1.7;margin:0 0 12px}
 body, p, li, span, a, .small {
   color: #0b1220 !important;
 }
+/* =========================
+   Customer Reviews Section
+   ========================= */
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.review-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+}
+
+.review-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0.75rem 0 1rem;
+}
+
+.stars {
+  color: #f5c518;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.review-card strong {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text);
+  opacity: 0.9;
+}
