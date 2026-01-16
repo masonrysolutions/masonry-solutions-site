@@ -1,480 +1,126 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Masonry Solutions Building & Construction Ltd</title>
-  <meta name="description" content="Masonry Solutions Building & Construction Ltd – Brickwork, blockwork, groundworks, residential & civils, heritage and repairs." />
-
-  <style>
-    :root{
-      /* Brand colours (from your logo) */
-      --brand-blue:#1F2F46;
-      --brand-gold:#C9A13A;
-      --brand-gold-light:#E2C873;
-      --brand-grey:#6B6F73;
-      --brand-white:#FFFFFF;
-
-      /* Site neutrals */
-      --text:#0f172a;
-      --muted:#475569;
-      --card: rgba(255,255,255,.78);
-      --border: rgba(15,23,42,.12);
-      --radius: 18px;
-      --shadow: 0 14px 36px rgba(2,6,23,.14);
-    }
-
-    *{ box-sizing:border-box; }
-    html,body{
-      margin:0;
-      padding:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
-      background: #f6f7fb;
-    }
-
-    a{ color:inherit; }
-
-    .container{
-      width:min(1100px, 92vw);
-      margin:0 auto;
-    }
-
-    /* Header */
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:50;
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-    }
-    .topbar .inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding:12px 0;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      text-decoration:none;
-    }
-    .brand-mark{
-      width:38px;
-      height:38px;
-      border-radius:10px;
-      border:2px solid var(--brand-gold);
-      background: #fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:900;
-      color: var(--brand-blue);
-      box-shadow: 0 8px 20px rgba(2,6,23,.08);
-      flex:0 0 auto;
-    }
-    .brand-text{
-      display:flex;
-      flex-direction:column;
-      line-height:1.1;
-    }
-    .brand-text strong{
-      color: var(--brand-blue);
-      letter-spacing:.2px;
-    }
-    .brand-text span{
-      color: var(--brand-grey);
-      font-size:13px;
-      margin-top:3px;
-    }
-
-    .nav{
-      display:flex;
-      gap:14px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
-    .nav a{
-      text-decoration:none;
-      font-weight:700;
-      font-size:14px;
-      color: var(--brand-blue);
-      padding:8px 10px;
-      border-radius:12px;
-    }
-    .nav a:hover{
-      background: rgba(201,161,58,.14);
-    }
-    .cta{
-      text-decoration:none;
-      font-weight:800;
-      padding:10px 14px;
-      border-radius:14px;
-      border:2px solid var(--brand-gold);
-      background:#fff;
-      color: var(--brand-blue);
-      white-space:nowrap;
-    }
-    .cta:hover{
-      background: var(--brand-gold);
-      color: var(--brand-white);
-    }
-
-    /* Hero */
-    .hero{
-      padding:42px 0 22px;
-    }
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:18px;
-      align-items:stretch;
-    }
-    @media (max-width: 860px){
-      .hero-grid{ grid-template-columns:1fr; }
-    }
-
-    .card{
-      background: var(--card);
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding:20px;
-    }
-
-    .hero h1{
-      margin:0 0 10px;
-      color: var(--brand-blue);
-      font-size: clamp(26px, 4vw, 40px);
-      letter-spacing:.2px;
-    }
-    .hero p{
-      margin:0 0 14px;
-      color: var(--muted);
-      font-size:16px;
-      line-height:1.55;
-    }
-
-    .badges{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:12px;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:9px 12px;
-      border-radius: 999px;
-      border:1px solid var(--border);
-      background:#fff;
-      font-weight:800;
-      color: var(--brand-blue);
-      font-size:13px;
-    }
-    .badge i{
-      width:10px;height:10px;border-radius:999px;background:var(--brand-gold);
-      display:inline-block;
-    }
-
-    .hero-actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-    .btn{
-      text-decoration:none;
-      font-weight:800;
-      padding:12px 16px;
-      border-radius:14px;
-      border:2px solid var(--brand-gold);
-      background:#fff;
-      color: var(--brand-blue);
-    }
-    .btn:hover{
-      background: var(--brand-gold);
-      color: var(--brand-white);
-    }
-    .btn.secondary{
-      border-color: rgba(31,47,70,.25);
-      color: var(--brand-blue);
-      background: rgba(255,255,255,.65);
-    }
-    .btn.secondary:hover{
-      background: rgba(31,47,70,.08);
-      color: var(--brand-blue);
-    }
-
-    /* Quick info */
-    .quick{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
-    .quick .row{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      padding:12px 14px;
-      border-radius:14px;
-      background:#fff;
-      border:1px solid var(--border);
-    }
-    .quick .row b{ color: var(--brand-blue); }
-    .small{ font-size:13px; color: var(--muted); }
-
-    /* Sections */
-    section{ padding: 18px 0; }
-    .section-title{
-      margin:0 0 10px;
-      color: var(--brand-blue);
-      font-size: 20px;
-    }
-
-    .grid-3{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:14px;
-    }
-    @media (max-width: 860px){
-      .grid-3{ grid-template-columns:1fr; }
-    }
-
-    .service h3{
-      margin:0 0 6px;
-      color: var(--brand-blue);
-      font-size:16px;
-    }
-    .service p{
-      margin:0;
-      color: var(--muted);
-      line-height:1.5;
-      font-size:14px;
-    }
-    .service .tag{
-      display:inline-block;
-      margin-top:10px;
-      font-weight:800;
-      font-size:12px;
-      color: var(--brand-blue);
-      padding:7px 10px;
-      border-radius:999px;
-      background: rgba(201,161,58,.14);
-      border:1px solid rgba(201,161,58,.28);
-    }
-
-    /* Footer */
-    .footer{
-      margin-top: 24px;
-      padding: 18px 0;
-      border-top: 1px solid var(--border);
-      background: rgba(255,255,255,.92);
-    }
-    .footer .container{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-    }
-
-    /* Social buttons */
-    .social-icons{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:center;
-    }
-    .social-icons a{
-      width:44px;
-      height:44px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:50%;
-      text-decoration:none;
-      font-weight:900;
-      font-family: Arial, sans-serif;
-      font-size:16px;
-      color: var(--brand-blue);
-      border:2px solid var(--brand-gold);
-      background: var(--brand-white);
-      transition: all 0.2s ease;
-    }
-    .social-icons a:hover{
-      background: var(--brand-gold);
-      color: var(--brand-white);
-    }
-  </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Home | Masonry Solutions Building & Construction Ltd</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
 </head>
-
 <body>
-
-  <!-- Header -->
-  <header class="topbar">
-    <div class="container">
-      <div class="inner">
-        <a class="brand" href="./">
-          <div class="brand-mark">MS</div>
-          <div class="brand-text">
-            <strong>Masonry Solutions</strong>
-            <span>Building &amp; Construction Ltd</span>
-          </div>
-        </a>
-
-        <nav class="nav" aria-label="Primary">
-          <a href="#services">Services</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-          <a class="cta" href="tel:08008611321">Call 0800 861 1321</a>
-        </nav>
+  
+<div class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo.png" alt="Masonry Solutions Building & Construction Ltd logo">
+      <div class="meta">
+        <strong>Masonry Solutions Building & Construction Ltd</strong>
+        <span>Masonry • Groundworks • Building & Fit-Outs</span>
       </div>
-    </div>
-  </header>
+    </a>
+    <nav class="nav">
+      <a href="index.html" style="color:var(--text);background:rgba(37,99,235,.14);border-color:rgba(37,99,235,.25)">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</div>
 
-  <!-- Hero -->
-  <main class="hero">
-    <div class="container">
-      <div class="hero-grid">
-        <div class="card">
-          <h1>Excellence in Masonry &amp; Construction</h1>
-          <p><b>Quality Workmanship Guaranteed.</b> Brickwork, blockwork, groundworks, residential &amp; civils, listed buildings &amp; heritage, plus repairs and maintenance.</p>
-
-          <div class="badges" aria-label="Highlights">
-            <span class="badge"><i></i> Residential &amp; Civils</span>
-            <span class="badge"><i></i> Listed Buildings &amp; Heritage</span>
-            <span class="badge"><i></i> Groundworks</span>
-            <span class="badge"><i></i> Professional &amp; Reliable</span>
-          </div>
-
-          <div class="hero-actions">
-            <a class="btn" href="tel:08008611321">Call: 0800 861 1321</a>
-            <a class="btn secondary" href="tel:07742509072">Mobile: 07742 509072</a>
-          </div>
-
-          <p class="small" style="margin-top:14px;">
-            Contact: <b>Stephen</b>
-          </p>
-        </div>
-
-        <aside class="card">
-          <h2 class="section-title" style="margin-top:0;">Quick Contact</h2>
-          <div class="quick">
-            <div class="row"><b>Business:</b><span>0800 861 1321</span></div>
-            <div class="row"><b>Mobile:</b><span>07742 509072</span></div>
-            <div class="row"><b>Service Areas:</b><span>North East &amp; surrounding</span></div>
-            <div class="row"><b>Work Type:</b><span>On-site</span></div>
-          </div>
-          <p class="small" style="margin-top:12px;">
-            Tip: If you want a QR code on the website later, we can add it with proper spacing so it scans reliably.
-          </p>
-        </aside>
+  
+<main class="container hero">
+  <div class="hero-grid">
+    <section class="card pad">
+      <div class="kicker"><span class="dot"></span> Premium local workmanship</div>
+      <h1>Top-end building work, backed by 20+ years’ experience</h1>
+      <p>
+        We’re a small, local-based company. From the first site visit, we take the time to meet you,
+        discuss what you’d like to achieve, and agree a clear plan.
+      </p>
+      <p>
+        We then help turn that plan or idea into reality in the most cost-effective and timely manner,
+        without compromising on quality.
+      </p>
+      <div class="btnrow">
+        <a class="btn primary" href="contact.html">Request a quote</a>
+        <a class="btn" href="gallery.html">View our work</a>
       </div>
-    </div>
-  </main>
+      <div class="badges">
+        <div class="badge">✅ 20+ years’ experience</div>
+        <div class="badge">✅ Local & reliable</div>
+        <div class="badge">✅ High-quality finishes</div>
+      </div>
+    </section>
 
-  <!-- Services -->
-  <section id="services">
-    <div class="container">
-      <h2 class="section-title">Services</h2>
+    <aside class="card pad">
+        <div class="hero-img">
+       <img src="assets/img/hero.jpg" alt="Masonry Solutions Building & Construction">
+      </div>
+    </aside>
+  </div>
 
-      <div class="grid-3">
-        <div class="card service">
-          <h3>Brickwork &amp; Blockwork</h3>
-          <p>New builds, repairs, garden walls, structural work and high-quality finishes.</p>
-          <span class="tag">Quality masonry</span>
-        </div>
-
-        <div class="card service">
-          <h3>Groundworks</h3>
-          <p>Site preparation, foundations, bases and practical support works to keep projects moving.</p>
-          <span class="tag">Solid starts</span>
-        </div>
-
-        <div class="card service">
-          <h3>Residential &amp; Civils</h3>
-          <p>Reliable work across domestic projects and civil jobs, delivered safely and professionally.</p>
-          <span class="tag">Built to last</span>
-        </div>
-
-        <div class="card service">
-          <h3>Listed Buildings &amp; Heritage</h3>
-          <p>Careful, respectful work on heritage properties with attention to traditional detail.</p>
-          <span class="tag">Heritage care</span>
-        </div>
-
-        <div class="card service">
-          <h3>Extensions &amp; Alterations</h3>
-          <p>Structural changes, openings, and improvements with clear communication throughout.</p>
-          <span class="tag">Clear planning</span>
-        </div>
-
-        <div class="card service">
-          <h3>Repairs &amp; Maintenance</h3>
-          <p>From small fixes to larger remedial work—done properly, with pride in the finish.</p>
-          <span class="tag">Trusted help</span>
-        </div>
+  <section class="section">
+    <div class="grid3">
+      <div class="card pad">
+        <h3>Clear plan</h3>
+        <p>We agree a clear plan from the first visit so everyone knows what’s happening and when.</p>
+      </div>
+      <div class="card pad">
+        <h3>Cost-effective</h3>
+        <p>We help you get the best result for your budget without compromising on quality.</p>
+      </div>
+      <div class="card pad">
+        <h3>Tidy finish</h3>
+        <p>We care about the details and leave sites clean, safe, and ready to enjoy.</p>
       </div>
     </div>
   </section>
 
-  <!-- About -->
-  <section id="about">
-    <div class="container">
-      <div class="card">
-        <h2 class="section-title" style="margin-top:0;">About</h2>
-        <p style="margin:0;color:var(--muted);line-height:1.6;">
-          Masonry Solutions Building &amp; Construction Ltd is committed to high standards, attention to detail, and clear customer communication.
-          We deliver quality workmanship across a wide range of masonry and construction services, operating safely and professionally on site.
-        </p>
+  <section class="section">
+    <div class="card pad">
+      <h2>Featured work</h2>
+           <div class="projects">
+        <div class="project">
+         <img src="assets/img/feature-brickwork.jpg" alt="Brickwork & Blockwork">
+          <div class="cap"><strong>Brickwork & Blockwork</strong><span>Extensions, walls, repairs and structural openings.</span></div>
+        </div>
+        <div class="project">
+        <img src="assets/img/feature-patios.jpg" alt="Patios">
+          <div class="cap"><strong>Patios & Driveways</strong><span>Paving, kerbing and external finishes built to last.</span></div>
+        </div>
+        <div class="project">
+          <img src="assets/img/feature-stonework.jpg" alt="Stonework">
+          <div class="cap"><strong>Stonework & Pointing</strong><span>Detail-focused repairs and tidy joints.</span></div>
+        </div>
+        <div class="project">
+          <img src="assets/img/feature-fitouts-repairs.jpg" alt="Fit Outs & Repairs">
+          <div class="cap"><strong>Fit-Outs & Repairs</strong><span>Kitchens, bathrooms, flooring and small jobs.</span></div>
+        </div>
       </div>
     </div>
   </section>
-
-  <!-- Contact -->
-  <section id="contact">
-    <div class="container">
-      <div class="card">
-        <h2 class="section-title" style="margin-top:0;">Contact</h2>
-        <p style="margin:0 0 10px;color:var(--muted);">
-          For quotes, enquiries, or to discuss your project, contact <b>Stephen</b>:
-        </p>
-        <p style="margin:0;color:var(--brand-blue);font-weight:800;">
-          Business: <a href="tel:08008611321">0800 861 1321</a> &nbsp;•&nbsp;
-          Mobile: <a href="tel:07742509072">07742 509072</a>
-        </p>
-      </div>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div>
+      <div><strong>Masonry Solutions Building & Construction Ltd</strong></div>
+      <div class="small">Quality masonry and building services</div>
     </div>
-  </section>
 
-  <!-- Footer with working social buttons -->
-  <footer class="footer">
-    <div class="container">
-      <div>
-        <div><strong>Masonry Solutions Building &amp; Construction Ltd</strong></div>
-        <div class="small">Quality masonry and building services</div>
-      </div>
+ <div class="social-icons">
+  <a href="https://www.facebook.com/search/top?q=Masonry%20Solutions%20Building%20%26%20Construction"
+     target="_blank" rel="noopener" aria-label="Facebook">f</a>
 
-      <div class="social-icons">
-        <a href="https://www.facebook.com/search/top?q=Masonry%20Solutions%20Building%20%26%20Construction"
-           target="_blank" rel="noopener" aria-label="Facebook">f</a>
+  <a href="https://www.instagram.com/masonry_solutions_buildings/"
+     target="_blank" rel="noopener" aria-label="Instagram">i</a>
 
-        <a href="https://www.instagram.com/masonry_solutions_buildings/"
-           target="_blank" rel="noopener" aria-label="Instagram">i</a>
+  <a href="https://www.linkedin.com/company/masonry-solutions-building-construction/"
+     target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
+</div>
 
-        <a href="https://www.linkedin.com/company/masonry-solutions-building-construction/"
-           target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
-      </div>
-
-      <div class="small">© Masonry Solutions Building &amp; Construction Ltd</div>
-    </div>
-  </footer>
-
+    <div class="small">© Masonry Solutions Building & Construction Ltd</div>
+  </div>
+</footer>
+ 
 </body>
 </html>
